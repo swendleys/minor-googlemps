@@ -1,5 +1,17 @@
-<ngui-map style="height:500px; width:70%;"
-  zoom="7"
-  center="Netherlands">
+<!--<ngui-map style="height:500px; width:70%;"-->
+  <!--zoom="7"-->
+  <!--center="Netherlands">-->
 
-</ngui-map>
+<!--</ngui-map>-->
+
+<div>{{arr}}</div>
+
+<agm-map [latitude]="lat" [longitude]="lng">
+  <agm-circle *ngFor="let c of jsonLatlon.data; let i = index"
+              [latitude]="c.lat"
+              [longitude]="c.lng"
+              [radius]="c.radius"
+              [fillColor]="c.colour">
+
+  </agm-circle>
+</agm-map>
