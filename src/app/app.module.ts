@@ -8,6 +8,7 @@ import { GoogleMapsAPIWrapper } from '@agm/core';
 import {GMapsService} from "./map/map.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Http, HttpModule} from "@angular/http";
+import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {Http, HttpModule} from "@angular/http";
     }),
     FormsModule,
     ReactiveFormsModule,
+    AgmSnazzyInfoWindowModule,
     HttpModule
    // NguiMapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyD0l8AD86NucXhybctdjkzL32XE7PDsYIA'})
   ],
