@@ -9,7 +9,7 @@ var dataset = require('./inbraak.json')
 
 
 app.get('/scrape', function(req, res){
-
+console.log('https://nld.youbianku.com/nl/postcode/'+dataset[0]._id)
   var jsonarr = []
   for(var i = 0; i < dataset.length; i++){
     url = 'https://nld.youbianku.com/nl/postcode/'+dataset[i]._id;
@@ -21,17 +21,16 @@ app.get('/scrape', function(req, res){
       if (!error) {
         var $ = cheerio.load(html);
 
+        var lat = $('strong:contains("Breedte")').next();
+        var lon = $('strong:contains("Lengte")').next();
+        []
 
-
-        var lat = $("*[itemprop = 'addressLocality']").get(2);
-        var lon = $("*[itemprop = 'addressLocality']").get(3);
         var contentLat = $(lat).text().trim();
         var contentLon = $(lon).text().trim();
 
         var data = $(this);
 
-
-       // console.log(contentLat, contentLon)
+       //  console.log(contentLat, contentLon)
 
         var json = {lat: "", lon: ""};
         json.lat = contentLat;
@@ -41,18 +40,26 @@ app.get('/scrape', function(req, res){
       }
 
         fs.writeFile('output.json', JSON.stringify(jsonarr, null, 4), function(err){
-          //console.log('File successfully written! - Check your project directory for the output.json file');
+         // console.log('File successfully written! - Check your project directory for the output.json file');
         })
     });
 
   }
 
-
-
 // Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
     res.send('Check your console!')
 
   });
+
+
+
+
+
+
+
+
+
+
 
 
 
