@@ -7,30 +7,29 @@ var CircularJSON = require('circular-json');
 var axios = require('axios')
 var dataset = require('./inbraak.json')
 var jsonarr = []
-var json = {lat: "", lon: "", aantal: ""};
 
-var kukar = 'TEST'
+
+
 
 app.get('/scrape', function(req, res){
 
-  for(var i = 0; i < 5; i++) {
-    var aantallen = dataset[i].count
+  for(let i = 0; i < dataset.length; i++) {
+
    //console.log(aantallen)
-    json.aantal = aantallen;
-    var j = i;
+
     axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + dataset[i]._id + '+Netherlands&key=AIzaSyAap9hU5GyKW10ITaMEOfc-YKa4gr7RZYQ')
       .then(function (response) {
 
-       // console.log(i)
+
         var contentlat = (response.data.results[0].geometry.location.lat);
         var contentlon = (response.data.results[0].geometry.location.lng);
-
-
+        var aantallen = dataset[i].count
+        var json = {lat: "", lon: "", aantal: ""};
         json.lat = contentlat;
         json.lon = contentlon;
         json.aantal= aantallen;
+        console.log(dataset[i]._id)
 
-        console.log(j)
         //console.log(dataset[2].count)
 
 

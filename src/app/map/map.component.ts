@@ -6,6 +6,7 @@ import {GMapsService} from "./map.service";
 import * as data from './inkomen.json';
 import * as inbraakdata from '../../assets/output.json';
 import * as data_latlon from './inkomen_latlon.json';
+import * as inbraak_latlon from './output.json';
 import {Http} from "@angular/http";
 import 'rxjs/add/operator/map';
 import {last} from "@angular/router/src/utils/collection";
@@ -31,8 +32,8 @@ jsonData
   constructor(private http: Http, private mapservice: GMapsService) {
   this.jsonData = data
     this.jsonLatlon = data_latlon
-    this.results = [];
-    this.result = [];
+    this.results = inbraak_latlon;
+    this.result = inbraak_latlon;
 
 
   }
