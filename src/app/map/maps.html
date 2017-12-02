@@ -7,6 +7,7 @@
 <div>{{arr}}</div>
 
 
+
 <agm-map [latitude]="lat" [longitude]="lng">
   <agm-marker *ngFor="let r of results; let i = index"
               [latitude]="r.lat"
@@ -25,5 +26,10 @@
               [fillColor]="c.colour">
 
   </agm-circle>
+
   <div id="legend"><h3>Legend</h3></div>
 </agm-map>
+<div class="legenda">
+  Legenda: <br>  <img class="img-responsive" style="width: 25em" height="15em" src="assets/gradient.png"> <br>
+  Arme wijk &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Rijke wijk
+</div>
