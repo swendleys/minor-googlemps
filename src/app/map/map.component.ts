@@ -72,6 +72,7 @@ jsonData
     console.log(inkomen)
 
 
+
     var spl = wijk.split(" ");
     this.http.get('http://nominatim.openstreetmap.org/search/' + wijk[0] + '%20' + wijk[1] + '%20' + wijk[2] + '%20' + stad + '?format=json&addressdetails=1&limit=1&polygon_svg=1')
       .subscribe(

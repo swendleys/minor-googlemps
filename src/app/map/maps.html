@@ -9,27 +9,41 @@
 
 
 <agm-map [latitude]="lat" [longitude]="lng">
+<div style="height: 10px;">
   <agm-marker *ngFor="let r of results; let i = index"
               [latitude]="r.lat"
               [longitude]="r.lon"
-              [label]="r.aantal.toString()">
+              [label]="r.aantal.toString()"
+              [iconUrl]="'assets/home_house_real_estate-512.png'"
+  >
+
     <agm-snazzy-info-window [maxWidth]="200" [closeWhenOthersOpen]="true">
+
       <ng-template>
        {{r.aantal}}
+
       </ng-template>
     </agm-snazzy-info-window>
+
+
   </agm-marker>
+</div>
+
+
+
   <agm-circle *ngFor="let c of jsonLatlon.data; let i = index"
               [latitude]="c.lat"
               [longitude]="c.lng"
               [radius]="c.radius"
               [fillColor]="c.colour">
-
   </agm-circle>
 
   <div id="legend"><h3>Legend</h3></div>
 </agm-map>
-<div class="legenda">
+<div class="legenda" style="border-style: solid;">
   Legenda: <br>  <img class="img-responsive" style="width: 25em" height="15em" src="assets/gradient.png"> <br>
   Arme wijk &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Rijke wijk
+<br><br>
+  <img class="img-responsive" src="assets/legendahouse.png"> &emsp;=&emsp;Aantal inbraken in de wijk
 </div>
+
