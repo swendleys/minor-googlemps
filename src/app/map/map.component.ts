@@ -1,5 +1,4 @@
-import {Component, OnInit} from "@angular/core";
-import { GoogleMapsAPIWrapper } from '@agm/core';
+import {Component, OnInit, ViewChild} from "@angular/core";
 import { MapsAPILoader } from '@agm/core';
 import { Observable, Observer } from 'rxjs';
 import {GMapsService} from "./map.service";
@@ -10,27 +9,32 @@ import * as inbraak_latlon from './output.json';
 import {Http} from "@angular/http";
 import 'rxjs/add/operator/map';
 import {last} from "@angular/router/src/utils/collection";
+import {DropdownModule} from "ngx-dropdown";
+import {any} from "codelyzer/util/function";
+import { AgmCoreModule, GoogleMapsAPIWrapper, AgmInfoWindow, AgmDataLayer, CircleManager, AgmCircle } from '@agm/core';
+import {$} from "protractor";
+
 @Component({
   selector : 'googlemap',
   templateUrl: 'maps.html',
   styleUrls: ['map.component.css']
 })
 export class GoogleMapsComponent implements OnInit{
-
+  @ViewChild(GoogleMapsAPIWrapper) private gmapWrapper: GoogleMapsAPIWrapper;
   arr = [];
   arr2 = [];
 
-  jsonLatlon
-
-jsonData
-  result
+  jsonLatlon;
+map : any;
+jsonData;
+  result;
   inkomen
   count = 0;
   results: any;
+  pages =['abc','bca','pqr'];
 
-
-  constructor(private http: Http, private mapservice: GMapsService) {
-  this.jsonData = data
+  constructor(private http: Http, private mapservice: GMapsService, map: MapsAPILoader) {
+  this.jsonData = data;
     this.jsonLatlon = data_latlon
     this.results = inbraak_latlon;
     this.result = inbraak_latlon;
@@ -43,7 +47,9 @@ jsonData
     console.log(this.jsonLatlon.data)
     console.log(this.results)
     this.convert()
-
+    let pos1 = {lat: 52.0704978, lng: 4.3006999};
+    this.gmapWrapper.setCenter(pos1)
+    this.gmapWrapper.setZoom(12);
 
     }
 
@@ -92,8 +98,85 @@ jsonData
     console.log(this.arr)
   }
 
-
   title: string = 'My first AGM project';
-  lat: number = 52.1941679;
-  lng: number = 4.6820146;
+  //lat: number = 52.1941679;
+ // lng: number = 4.6820146;
+
+  public ewa = () => {
+
+    var li = document.getElementById("Denhaag")
+    console.log("ewa" +li.innerText);
+
+
+
+    alert("ewa");
+    let position = {lat: 52.0704978, lng: 4.3006999};
+    this.gmapWrapper.panTo(position);
+    this.gmapWrapper.setZoom(12);
+
+  };
+
+  public goToDenHaag = () => {
+    let position = {lat: 52.0704978, lng: 4.3006999};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToAmsterdam = () => {
+
+
+    let position = {lat: 52.379189, lng: 4.899431};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToUtrecht = () => {
+
+
+    let position = {lat: 52.0928768, lng: 5.104480};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToGouda = () => {
+
+
+    let position = {lat: 52.0115205, lng: 4.7104633};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToEindhoven = () => {
+
+
+    let position = {lat: 51.441642, lng: 5.4697225};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public  goToRotterdam = () => {
+ console.log("We gaan naar Roffa");
+    let position = {lat:  51.9244201, lng:  4.4777325};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToAlmere = () => {
+
+
+    let position = {lat: 52.3507849, lng: 5.2647016};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToGroningen = () => {
+
+
+    let position = {lat: 53.2193835, lng: 6.5665018};
+    this.gmapWrapper.panTo(position);
+  };
+
+  public goToNijmegen = () => {
+
+
+
+    let position = {lat: 51.8125626, lng: 5.8372264};
+    this.gmapWrapper.panTo(position);
+  };
+
 }
+
+

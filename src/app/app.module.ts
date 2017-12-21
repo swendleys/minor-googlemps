@@ -9,6 +9,9 @@ import {GMapsService} from "./map/map.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Http, HttpModule} from "@angular/http";
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
+import { AlertModule } from 'ngx-bootstrap';
+import {DropdownModule} from "ngx-dropdown";
+
 
 @NgModule({
   declarations: [
@@ -17,13 +20,14 @@ import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
   ],
   imports: [
     BrowserModule,
+    DropdownModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDHc8r0xb1x2QOmslvXOYL5unMdODNCaro'
+      apiKey: 'AIzaSyB8v3TT9It2lJ5JCAttcqRfF8o0POoNlsY'
     }),
     FormsModule,
     ReactiveFormsModule,
     AgmSnazzyInfoWindowModule,
-    HttpModule
+    HttpModule,
    // NguiMapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyD0l8AD86NucXhybctdjkzL32XE7PDsYIA'})
   ],
   providers: [GoogleMapsAPIWrapper, GMapsService],

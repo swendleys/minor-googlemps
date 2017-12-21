@@ -7,8 +7,23 @@
 <div>{{arr}}</div>
 
 
+<div class="dropdown" dropdown [dropdownToggle]="false">
+  <button class="btn btn-primary" dropdown-open>Kies een stad</button>
+  <ul class="dropdown-menu">
+    <li value="Denhaag" (click)="goToDenHaag()"><a>Den haag</a></li>
+    <li value="Amsterdam" (click)="goToAmsterdam()"><a>Amsterdam</a></li>
+    <li value="Utrecht" (click)="goToUtrecht()"><a>Utrecht</a></li>
+    <li value="Gouda" (click)="goToGouda()"><a>Gouda</a></li>
+    <li value="Eindhoven" (click)="goToEindhoven()"><a>Eindhoven</a></li>
+    <li value="Rotterdam" (click)="goToRotterdam()"><a>Rotterdam</a></li>
+    <li value="Almere" (click)="goToAlmere()"><a>Almere</a></li>
+    <li value="Groningen" (click)="goToGroningen()"><a>Groningen</a></li>
+    <li value="Nijmegen" (click)="goToNijmegen()"><a>Nijmegen</a></li>
 
-<agm-map [latitude]="lat" [longitude]="lng">
+  </ul>
+</div>
+
+<agm-map [latitude]="lat" [longitude]="lng"[usePanning]='true'>
 <div style="height: 10px;">
   <agm-marker *ngFor="let r of results; let i = index"
               [latitude]="r.lat"
@@ -16,7 +31,6 @@
               [label]="r.aantal.toString()"
               [iconUrl]="'assets/home_house_real_estate-512.png'"
   >
-
     <agm-snazzy-info-window [maxWidth]="200" [closeWhenOthersOpen]="true">
 
       <ng-template>
@@ -25,11 +39,8 @@
       </ng-template>
     </agm-snazzy-info-window>
 
-
   </agm-marker>
 </div>
-
-
 
   <agm-circle *ngFor="let c of jsonLatlon.data; let i = index"
               [latitude]="c.lat"
@@ -39,7 +50,11 @@
   </agm-circle>
 
   <div id="legend"><h3>Legend</h3></div>
+
 </agm-map>
+
+
+
 <div class="legenda" style="border-style: solid;">
   Legenda: <br>  <img class="img-responsive" style="width: 25em" height="15em" src="assets/gradient.png"> <br>
   Arme wijk &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Rijke wijk
