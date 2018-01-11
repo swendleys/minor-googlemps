@@ -6,17 +6,47 @@ var app     = express();
 var CircularJSON = require('circular-json');
 var axios = require('axios')
 var dataset = require('./inbraak.json')
+require('xlsx');
 var jsonarr = []
-
-
-
+var jsoninfo = []
 
 app.get('/scrape', function(req, res){
 
+  /* set up XMLHttpRequest */
+  var url = "kwb-2017.xls";
+  var oReq = new XMLHttpRequest();
+  oReq.open("GET", url, true);
+  oReq.responseType = "arraybuffer";
+
+  oReq.onload = function(e) {
+  var arraybuffer = oReq.response;
+
+  /* convert data to binary string */
+  var data = new Uint8Array(arraybuffer);
+  var arr = new Array();
+  for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+  var bstr = arr.join("");
+
+  /* Call XLSX */
+  var workbook = XLSX.read(bstr, {type:"binary"});
+
+  /* DO SOMETHING WITH workbook HERE */
+  var first_sheet_name = workbook.SheetNames[0];
+
+  /* Get worksheet */
+  var worksheet = workbook.Sheets[first_sheet_name];
+
+   jsoninfo.push(XLSX.utils.sheet_to_json(worksheet));
+    fs.writeFile('fullinfo.json', JSON.stringify(jsoninfo, null, 4), function(err){
+      // console.log('File successfully written! - Check your project directory for the output.json file');
+    })
+
+}
+
+oReq.send();
+
   for(let i = 0; i < dataset.length; i++) {
-
    //key=AIzaSyAap9hU5GyKW10ITaMEOfc-YKa4gr7RZYQ
-
     axios.get('https://www.politie.nl/mijn-buurt/misdaad-in-kaart/lijst?geoquery=Den+Haag%2C+Nederland&distance=5.0&categorie=1&categorie=2&pageSize=500')
       .then(function (response) {
 
@@ -45,14 +75,8 @@ app.get('/scrape', function(req, res){
 
   }
 
-
   res.send('Check your console!')
 });
-
-
-
-
-
 
 
 
