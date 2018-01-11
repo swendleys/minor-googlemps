@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node index3 ",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -30,6 +30,7 @@
     "circular-json": "^0.4.0",
     "core-js": "^2.4.1",
     "jsonfile": "^4.0.0",
+    "moment": "^2.20.1",
     "ng": "0.0.0-rc6",
     "ng4-material-dropdown": "^1.0.0",
     "ngx-bootstrap": "^2.0.0-rc.0",

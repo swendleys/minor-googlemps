@@ -3,6 +3,7 @@ import { MapsAPILoader } from '@agm/core';
 import { Observable, Observer } from 'rxjs';
 import {GMapsService} from "./map.service";
 import * as data from './inkomen.json';
+import * as denhaagdagen from './denhaagdagen.json';
 import * as inbraakdata from '../../assets/output.json';
 import * as data_latlon from './inkomen_latlon.json';
 import * as inbraak_latlon from './output.json';
@@ -25,19 +26,37 @@ export class GoogleMapsComponent implements OnInit{
   arr2 = [];
 
   jsonLatlon;
-map : any;
-jsonData;
+  map : any;
+  jsonData;
   result;
-  inkomen
+  inkomen;
+  item;
+  maandag = 0;
+  dinsdag = 0;
+  woensdag = 0;
+  donderdag = 0;
+  vrijdag = 0;
+  zaterdag = 0;
+  zondag = 0;
+  mf = 1;
+  percentageMaandag;
+  percentageDinsdag;
+  percentageWoensdag;
+  percentageDonderdag;
+  percentageVrijdag;
+  percentageZaterdag;
+  percentageZondag;
   count = 0;
   results: any;
+  denHaagDays;
   pages =['abc','bca','pqr'];
 
   constructor(private http: Http, private mapservice: GMapsService, map: MapsAPILoader) {
-  this.jsonData = data;
+    this.jsonData = data;
     this.jsonLatlon = data_latlon
     this.results = inbraak_latlon;
     this.result = inbraak_latlon;
+    this.denHaagDays = denhaagdagen;
 
 
   }
@@ -51,15 +70,88 @@ jsonData;
     this.gmapWrapper.setCenter(pos1)
     this.gmapWrapper.setZoom(12);
 
+
+    let m = 0;
+
+    for (let i=0; i< this.denHaagDays.length; i++)
+    {
+      if(this.denHaagDays[i]==='Maandag') {
+        this.maandag++;
+      }
+      if(this.denHaagDays[i]==='Dinsdag') {
+        this.dinsdag++;
+      }
+      if(this.denHaagDays[i]==='Woensdag') {
+        this.woensdag++;
+      }
+      if(this.denHaagDays[i]==='Donderdag') {
+        this.donderdag++;
+      }
+      if(this.denHaagDays[i]==='Vrijdag') {
+        this.vrijdag++;
+      }
+      if(this.denHaagDays[i]==='Zaterdag') {
+        this.zaterdag++;
+      }
+      if(this.denHaagDays[i]==='Zondag') {
+        this.zondag++;
+      }
+//check welke meest voorkomt
+      for (let j=i; j<this.denHaagDays.length; j++)
+      {
+        if (this.denHaagDays[i] == this.denHaagDays[j])
+          m++;
+        if (this.mf<m)
+        {
+          this.mf=m;
+          this.item = this.denHaagDays[i];
+        }
+      }
+      m=0;
     }
+    this.percentageMaandag = this.mf / (this.denHaagDays.length) * 100;
+    this.percentageMaandag = this.percentageMaandag.toFixed(1);
+
+    this.percentageDinsdag = this.dinsdag / (this.denHaagDays.length) * 100;
+    this.percentageDinsdag = this.percentageDinsdag.toFixed(1);
+
+    this.percentageWoensdag = this.woensdag / (this.denHaagDays.length) * 100;
+    this.percentageWoensdag = this.percentageWoensdag.toFixed(1);
+
+    this.percentageDonderdag = this.donderdag / (this.denHaagDays.length) * 100;
+    this.percentageDonderdag = this.percentageDonderdag.toFixed(1);
+
+    this.percentageVrijdag = this.vrijdag / (this.denHaagDays.length) * 100;
+    this.percentageVrijdag = this.percentageVrijdag.toFixed(1);
+
+    this.percentageZaterdag = this.zaterdag / (this.denHaagDays.length) * 100;
+    this.percentageZaterdag = this.percentageZaterdag.toFixed(1);
+
+    this.percentageZondag = this.zondag / (this.denHaagDays.length) * 100;
+    this.percentageZondag = this.percentageZondag.toFixed(1);
+
+    console.log(`${this.item} ( ${this.mf} times ) `) ;
+    console.log("maandag: " + this.maandag) ;
+    console.log("dinsdag: " + this.dinsdag) ;
+    console.log("woensdag: " + this.woensdag) ;
+    console.log("donderdag: " + this.donderdag) ;
+    console.log("vrijdag: " + this.vrijdag) ;
+    console.log("zaterdag: " + this.zaterdag) ;
+    console.log("zondag: " + this.zondag) ;
+
+  }
+
+
 
   convert(){
     for(var i = 0; i < this.jsonData.length; i++){
       var spl = this.jsonData[i].wijk.split(" ");
-     // this.getLatLon(this.jsonData[i].wijk, this.jsonData[i].stad, this.jsonData[i].inkomen)
+      // this.getLatLon(this.jsonData[i].wijk, this.jsonData[i].stad, this.jsonData[i].inkomen)
     }
     //this.showArr()
   }
+
+
 
 
   getLatLon(wijk, stad, inkomen) {
@@ -100,7 +192,10 @@ jsonData;
 
   title: string = 'My first AGM project';
   //lat: number = 52.1941679;
- // lng: number = 4.6820146;
+  // lng: number = 4.6820146;
+
+
+
 
   public ewa = () => {
 
@@ -119,6 +214,18 @@ jsonData;
   public goToDenHaag = () => {
     let position = {lat: 52.0704978, lng: 4.3006999};
     this.gmapWrapper.panTo(position);
+
+    document.getElementById("info").innerHTML = "Inbraakdata is van <strong>11-10-2017</strong> tot heden. (bron: www.politie.nl)<br>\n" +
+      "  De favoriete inbraakdag in Den Haag is: <strong> "+ this.item + "</strong><br>\n" +
+      "\n" +
+      "  Verdeling inbraken over de week:  <br>\n" +
+      "  Maandag: <strong> " + this.percentageMaandag + "%</strong>  <br>\n" +
+      "  Dinsdag: <strong> " + this.percentageDinsdag+ "%</strong> <br>\n" +
+      "  Woensdag:<strong> " + this.percentageWoensdag+ "%</strong> <br>\n" +
+      "  Donderdag: <strong>" + this.percentageDonderdag+ "%</strong> <br>\n" +
+      "  Vrijdag: <strong> " + this.percentageVrijdag+ "%</strong> <br>\n" +
+      "  Zaterdag: <strong> " + this.percentageZaterdag+ "%</strong> <br>\n" +
+      "  Zondag:<strong>  " + this.percentageZondag+ "%</strong> <br>";
   };
 
   public goToAmsterdam = () => {
@@ -129,7 +236,6 @@ jsonData;
   };
 
   public goToUtrecht = () => {
-
 
     let position = {lat: 52.0928768, lng: 5.104480};
     this.gmapWrapper.panTo(position);
@@ -150,7 +256,7 @@ jsonData;
   };
 
   public  goToRotterdam = () => {
- console.log("We gaan naar Roffa");
+    console.log("We gaan naar Roffa");
     let position = {lat:  51.9244201, lng:  4.4777325};
     this.gmapWrapper.panTo(position);
   };

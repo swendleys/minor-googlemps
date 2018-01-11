@@ -15,9 +15,9 @@ app.get('/scrape', function(req, res){
 
   for(let i = 0; i < dataset.length; i++) {
 
-   //console.log(aantallen)
+   //key=AIzaSyAap9hU5GyKW10ITaMEOfc-YKa4gr7RZYQ
 
-    axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + dataset[i]._id + '+Netherlands&key=AIzaSyAap9hU5GyKW10ITaMEOfc-YKa4gr7RZYQ')
+    axios.get('https://www.politie.nl/mijn-buurt/misdaad-in-kaart/lijst?geoquery=Den+Haag%2C+Nederland&distance=5.0&categorie=1&categorie=2&pageSize=500')
       .then(function (response) {
 
 

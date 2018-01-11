@@ -6,9 +6,11 @@
 
 <div>{{arr}}</div>
 
+<span id="info">
 
+    </span>
 <div class="dropdown" dropdown [dropdownToggle]="false">
-  <button class="btn btn-primary" dropdown-open>Kies een stad</button>
+  <button class="btn btn-primary" dropdown-open>Kies een stad voor meer info</button>
   <ul class="dropdown-menu">
     <li value="Denhaag" (click)="goToDenHaag()"><a>Den haag</a></li>
     <li value="Amsterdam" (click)="goToAmsterdam()"><a>Amsterdam</a></li>
@@ -21,6 +23,8 @@
     <li value="Nijmegen" (click)="goToNijmegen()"><a>Nijmegen</a></li>
 
   </ul>
+
+
 </div>
 
 <agm-map [latitude]="lat" [longitude]="lng"[usePanning]='true'>
@@ -52,6 +56,7 @@
   <div id="legend"><h3>Legend</h3></div>
 
 </agm-map>
+<br>
 
 
 
