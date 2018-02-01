@@ -4,11 +4,15 @@ import { Observable, Observer } from 'rxjs';
 import {GMapsService} from "./map.service";
 import * as data from './inkomen.json';
 import * as denhaagdagen from './denhaagdagen.json';
+import * as amsterdamdagen from './amsterdamdagen.json';
+import * as utrechtdagen from './utrechtdagen.json';
 import * as inbraakdata from '../../assets/output.json';
 import * as data_latlon from './inkomen_latlon.json';
 import * as inbraak_latlon from './output.json';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import {Http} from "@angular/http";
 import 'rxjs/add/operator/map';
+//import {VaadinCharts, DataSeries} from '../../../bower_components/vaadin-charts/vaadin-charts.html'
 import {last} from "@angular/router/src/utils/collection";
 import {DropdownModule} from "ngx-dropdown";
 import {any} from "codelyzer/util/function";
@@ -18,26 +22,48 @@ import {$} from "protractor";
 @Component({
   selector : 'googlemap',
   templateUrl: 'maps.html',
-  styleUrls: ['map.component.css']
+  styleUrls: ['map.component.css'],
+  //directives: [VaadinCharts, DataSeries]
 })
 export class GoogleMapsComponent implements OnInit{
   @ViewChild(GoogleMapsAPIWrapper) private gmapWrapper: GoogleMapsAPIWrapper;
   arr = [];
   arr2 = [];
-
+  showChart: boolean = false;
+  showDenHaag: boolean = false;
+  showAmsterdam: boolean = false;
+  showInfo: boolean = false;
   jsonLatlon;
   map : any;
   jsonData;
   result;
   inkomen;
+  barChartData: any;
   item;
-  maandag = 0;
-  dinsdag = 0;
-  woensdag = 0;
-  donderdag = 0;
-  vrijdag = 0;
-  zaterdag = 0;
-  zondag = 0;
+  denHaagmaandag = 0;
+  denHaagdinsdag = 0;
+  denHaagwoensdag = 0;
+  denHaagdonderdag = 0;
+  denHaagvrijdag = 0;
+  denHaagzaterdag = 0;
+  denHaagzondag = 0;
+
+  amsterdammaandag = 0;
+  amsterdamdinsdag = 0;
+  amsterdamwoensdag = 0;
+  amsterdamdonderdag = 0;
+  amsterdamvrijdag = 0;
+  amsterdamzaterdag = 0;
+  amsterdamzondag = 0;
+
+  utrechtmaandag = 0;
+  utrechtdinsdag = 0;
+  utrechtwoensdag = 0;
+  utrechtdonderdag = 0;
+  utrechtvrijdag = 0;
+  utrechtzaterdag = 0;
+  utrechtzondag = 0;
+
   mf = 1;
   percentageMaandag;
   percentageDinsdag;
@@ -49,6 +75,8 @@ export class GoogleMapsComponent implements OnInit{
   count = 0;
   results: any;
   denHaagDays;
+ utrechtDays;
+  amsterdamDays;
   pages =['abc','bca','pqr'];
 
   constructor(private http: Http, private mapservice: GMapsService, map: MapsAPILoader) {
@@ -57,9 +85,21 @@ export class GoogleMapsComponent implements OnInit{
     this.results = inbraak_latlon;
     this.result = inbraak_latlon;
     this.denHaagDays = denhaagdagen;
-
+    this.amsterdamDays = amsterdamdagen;
+    this.utrechtDays = utrechtdagen;
 
   }
+  public barChartOptions:any = {
+    scaleShowVerticalLines: false,
+    responsive: true
+  };
+
+  public barChartLegend:boolean = false;
+
+  public barChartLabels:string[] = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
+
+
+  public barChartType:string = 'bar';
 
   ngOnInit(){
     console.log(this.jsonData)
@@ -70,33 +110,35 @@ export class GoogleMapsComponent implements OnInit{
     this.gmapWrapper.setCenter(pos1)
     this.gmapWrapper.setZoom(12);
 
-
+    this.showChart = false;
     let m = 0;
 
     for (let i=0; i< this.denHaagDays.length; i++)
     {
       if(this.denHaagDays[i]==='Maandag') {
-        this.maandag++;
+        this.denHaagmaandag++;
       }
       if(this.denHaagDays[i]==='Dinsdag') {
-        this.dinsdag++;
+        this.denHaagdinsdag++;
       }
       if(this.denHaagDays[i]==='Woensdag') {
-        this.woensdag++;
+        this.denHaagwoensdag++;
       }
       if(this.denHaagDays[i]==='Donderdag') {
-        this.donderdag++;
+        this.denHaagdonderdag++;
       }
       if(this.denHaagDays[i]==='Vrijdag') {
-        this.vrijdag++;
+        this.denHaagvrijdag++;
       }
       if(this.denHaagDays[i]==='Zaterdag') {
-        this.zaterdag++;
+        this.denHaagzaterdag++;
       }
       if(this.denHaagDays[i]==='Zondag') {
-        this.zondag++;
+        this.denHaagzondag++;
       }
-//check welke meest voorkomt
+
+
+     //check welke meest voorkomt
       for (let j=i; j<this.denHaagDays.length; j++)
       {
         if (this.denHaagDays[i] == this.denHaagDays[j])
@@ -109,37 +151,107 @@ export class GoogleMapsComponent implements OnInit{
       }
       m=0;
     }
-    this.percentageMaandag = this.mf / (this.denHaagDays.length) * 100;
-    this.percentageMaandag = this.percentageMaandag.toFixed(1);
 
-    this.percentageDinsdag = this.dinsdag / (this.denHaagDays.length) * 100;
-    this.percentageDinsdag = this.percentageDinsdag.toFixed(1);
+    //tel dagen amsterdam
+    for (let i=0; i< this.amsterdamDays.length; i++)
+    {
+      if(this.amsterdamDays[i]==='Maandag') {
+        this.amsterdammaandag++;
+      }
+      if(this.amsterdamDays[i]==='Dinsdag') {
+        this.amsterdamdinsdag++;
+      }
+      if(this.amsterdamDays[i]==='Woensdag') {
+        this.amsterdamwoensdag++;
+      }
+      if(this.amsterdamDays[i]==='Donderdag') {
+        this.amsterdamdonderdag++;
+      }
+      if(this.amsterdamDays[i]==='Vrijdag') {
+        this.amsterdamvrijdag++;
+      }
+      if(this.amsterdamDays[i]==='Zaterdag') {
+        this.amsterdamzaterdag++;
+      }
+      if(this.amsterdamDays[i]==='Zondag') {
+        this.amsterdamzondag++;
+      }
 
-    this.percentageWoensdag = this.woensdag / (this.denHaagDays.length) * 100;
-    this.percentageWoensdag = this.percentageWoensdag.toFixed(1);
 
-    this.percentageDonderdag = this.donderdag / (this.denHaagDays.length) * 100;
-    this.percentageDonderdag = this.percentageDonderdag.toFixed(1);
+      //check welke meest voorkomt
+      for (let j=i; j<this.amsterdamDays.length; j++)
+      {
+        if (this.amsterdamDays[i] == this.amsterdamDays[j])
+          m++;
+        if (this.mf<m)
+        {
+          this.mf=m;
+          this.item = this.amsterdamDays[i];
+        }
+      }
+      m=0;
+    }
 
-    this.percentageVrijdag = this.vrijdag / (this.denHaagDays.length) * 100;
-    this.percentageVrijdag = this.percentageVrijdag.toFixed(1);
 
-    this.percentageZaterdag = this.zaterdag / (this.denHaagDays.length) * 100;
-    this.percentageZaterdag = this.percentageZaterdag.toFixed(1);
+    //tel dagen utrecht
+    for (let i=0; i< this.utrechtDays.length; i++)
+    {
+      if(this.utrechtDays[i]==='Maandag') {
+        this.utrechtmaandag++;
+      }
+      if(this.utrechtDays[i]==='Dinsdag') {
+        this.utrechtdinsdag++;
+      }
+      if(this.utrechtDays[i]==='Woensdag') {
+        this.utrechtwoensdag++;
+      }
+      if(this.utrechtDays[i]==='Donderdag') {
+        this.utrechtdonderdag++;
+      }
+      if(this.utrechtDays[i]==='Vrijdag') {
+        this.utrechtvrijdag++;
+      }
+      if(this.utrechtDays[i]==='Zaterdag') {
+        this.utrechtzaterdag++;
+      }
+      if(this.utrechtDays[i]==='Zondag') {
+        this.utrechtzondag++;
+      }
 
-    this.percentageZondag = this.zondag / (this.denHaagDays.length) * 100;
-    this.percentageZondag = this.percentageZondag.toFixed(1);
+
+      //check welke meest voorkomt
+      for (let j=i; j<this.utrechtDays.length; j++)
+      {
+        if (this.utrechtDays[i] == this.utrechtDays[j])
+          m++;
+        if (this.mf<m)
+        {
+          this.mf=m;
+          this.item = this.utrechtDays[i];
+        }
+      }
+      m=0;
+    }
+
 
     console.log(`${this.item} ( ${this.mf} times ) `) ;
-    console.log("maandag: " + this.maandag) ;
-    console.log("dinsdag: " + this.dinsdag) ;
-    console.log("woensdag: " + this.woensdag) ;
-    console.log("donderdag: " + this.donderdag) ;
-    console.log("vrijdag: " + this.vrijdag) ;
-    console.log("zaterdag: " + this.zaterdag) ;
-    console.log("zondag: " + this.zondag) ;
+    console.log("maandag: " + this.denHaagmaandag) ;
+    console.log("dinsdag: " + this.denHaagdinsdag) ;
+    console.log("woensdag: " + this.denHaagwoensdag) ;
+    console.log("donderdag: " + this.denHaagdonderdag) ;
+    console.log("vrijdag: " + this.denHaagvrijdag) ;
+    console.log("zaterdag: " + this.denHaagzaterdag) ;
+    console.log("zondag: " + this.denHaagzondag) ;
+
+
+    this.barChartData = [
+      {data: [this.denHaagmaandag, this.denHaagdinsdag, this.denHaagwoensdag,  this.denHaagdonderdag ,this.denHaagvrijdag ,this.denHaagzaterdag ,this.denHaagzondag]},
+    ];
 
   }
+
+
+
 
 
 
@@ -203,7 +315,6 @@ export class GoogleMapsComponent implements OnInit{
     console.log("ewa" +li.innerText);
 
 
-
     alert("ewa");
     let position = {lat: 52.0704978, lng: 4.3006999};
     this.gmapWrapper.panTo(position);
@@ -212,10 +323,35 @@ export class GoogleMapsComponent implements OnInit{
   };
 
   public goToDenHaag = () => {
+
+
+    this.percentageMaandag = this.mf / (this.denHaagDays.length) * 100;
+    this.percentageMaandag = this.percentageMaandag.toFixed(1);
+
+    this.percentageDinsdag = this.denHaagdinsdag / (this.denHaagDays.length) * 100;
+    this.percentageDinsdag = this.percentageDinsdag.toFixed(1);
+
+    this.percentageWoensdag = this.denHaagwoensdag / (this.denHaagDays.length) * 100;
+    this.percentageWoensdag = this.percentageWoensdag.toFixed(1);
+
+    this.percentageDonderdag = this.denHaagdonderdag / (this.denHaagDays.length) * 100;
+    this.percentageDonderdag = this.percentageDonderdag.toFixed(1);
+
+    this.percentageVrijdag = this.denHaagvrijdag / (this.denHaagDays.length) * 100;
+    this.percentageVrijdag = this.percentageVrijdag.toFixed(1);
+
+    this.percentageZaterdag = this.denHaagzaterdag / (this.denHaagDays.length) * 100;
+    this.percentageZaterdag = this.percentageZaterdag.toFixed(1);
+
+    this.percentageZondag = this.denHaagzondag / (this.denHaagDays.length) * 100;
+    this.percentageZondag = this.percentageZondag.toFixed(1);
+
     let position = {lat: 52.0704978, lng: 4.3006999};
     this.gmapWrapper.panTo(position);
+    this.showChart=!this.showChart;
+    this.showInfo=!this.showInfo;
 
-    document.getElementById("info").innerHTML = "Inbraakdata is van <strong>11-10-2017</strong> tot heden. (bron: www.politie.nl)<br>\n" +
+    /*document.getElementById("info").innerHTML = " Inbraakdata is van <strong>11-10-2017</strong> tot heden. (bron: www.politie.nl)<br>\n" +
       "  De favoriete inbraakdag in Den Haag is: <strong> "+ this.item + "</strong><br>\n" +
       "\n" +
       "  Verdeling inbraken over de week:  <br>\n" +
@@ -225,24 +361,72 @@ export class GoogleMapsComponent implements OnInit{
       "  Donderdag: <strong>" + this.percentageDonderdag+ "%</strong> <br>\n" +
       "  Vrijdag: <strong> " + this.percentageVrijdag+ "%</strong> <br>\n" +
       "  Zaterdag: <strong> " + this.percentageZaterdag+ "%</strong> <br>\n" +
-      "  Zondag:<strong>  " + this.percentageZondag+ "%</strong> <br>";
+      "  Zondag:<strong>  " + this.percentageZondag+ "%</strong> <br>";*/
   };
 
   public goToAmsterdam = () => {
-
+    this.showInfo=!this.showInfo;
+    this.showChart=!this.showChart;
+    this.barChartData = [
+      {data: [this.amsterdammaandag, this.amsterdamdinsdag, this.amsterdamwoensdag,  this.amsterdamdonderdag ,this.amsterdamvrijdag,this.amsterdamzaterdag ,this.amsterdamzondag]},
+    ];
 
     let position = {lat: 52.379189, lng: 4.899431};
     this.gmapWrapper.panTo(position);
-  };
 
+    this.percentageMaandag = this.amsterdammaandag / (this.amsterdamDays.length) * 100;
+    this.percentageMaandag = this.percentageMaandag.toFixed(1);
+
+    this.percentageDinsdag = this.amsterdamdinsdag / (this.amsterdamDays.length) * 100;
+    this.percentageDinsdag = this.percentageDinsdag.toFixed(1);
+
+    this.percentageWoensdag = this.amsterdamwoensdag / (this.amsterdamDays.length) * 100;
+    this.percentageWoensdag = this.percentageWoensdag.toFixed(1);
+
+    this.percentageDonderdag = this.amsterdamdonderdag / (this.amsterdamDays.length) * 100;
+    this.percentageDonderdag = this.percentageDonderdag.toFixed(1);
+
+    this.percentageVrijdag = this.amsterdamvrijdag / (this.amsterdamDays.length) * 100;
+    this.percentageVrijdag = this.percentageVrijdag.toFixed(1);
+
+    this.percentageZaterdag = this.amsterdamzaterdag / (this.amsterdamDays.length) * 100;
+    this.percentageZaterdag = this.percentageZaterdag.toFixed(1);
+
+    this.percentageZondag = this.amsterdamzondag / (this.amsterdamDays.length) * 100;
+    this.percentageZondag = this.percentageZondag.toFixed(1);
+  };
   public goToUtrecht = () => {
+    this.showInfo=!this.showInfo;
+    this.showChart=!this.showChart;
+    this.barChartData = [
+      {data: [this.utrechtmaandag, this.utrechtdinsdag, this.utrechtwoensdag,  this.utrechtdonderdag ,this.utrechtvrijdag,this.utrechtzaterdag ,this.utrechtzondag]},
+    ];
+    this.percentageMaandag = this.utrechtmaandag / (this.utrechtDays.length) * 100;
+    this.percentageMaandag = this.percentageMaandag.toFixed(1);
+
+    this.percentageDinsdag = this.utrechtdinsdag / (this.utrechtDays.length) * 100;
+    this.percentageDinsdag = this.percentageDinsdag.toFixed(1);
+
+    this.percentageWoensdag = this.utrechtwoensdag / (this.utrechtDays.length) * 100;
+    this.percentageWoensdag = this.percentageWoensdag.toFixed(1);
+
+    this.percentageDonderdag = this.utrechtdonderdag / (this.utrechtDays.length) * 100;
+    this.percentageDonderdag = this.percentageDonderdag.toFixed(1);
+
+    this.percentageVrijdag = this.utrechtvrijdag / (this.utrechtDays.length) * 100;
+    this.percentageVrijdag = this.percentageVrijdag.toFixed(1);
+
+    this.percentageZaterdag = this.utrechtzaterdag / (this.utrechtDays.length) * 100;
+    this.percentageZaterdag = this.percentageZaterdag.toFixed(1);
+
+    this.percentageZondag = this.utrechtzondag / (this.utrechtDays.length) * 100;
+    this.percentageZondag = this.percentageZondag.toFixed(1);
 
     let position = {lat: 52.0928768, lng: 5.104480};
     this.gmapWrapper.panTo(position);
   };
 
   public goToGouda = () => {
-
 
     let position = {lat: 52.0115205, lng: 4.7104633};
     this.gmapWrapper.panTo(position);

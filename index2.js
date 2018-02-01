@@ -6,11 +6,12 @@ var app     = express();
 var CircularJSON = require('circular-json');
 var axios = require('axios')
 var dataset = require('./inbraak.json')
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 require('xlsx');
 var jsonarr = []
 var jsoninfo = []
 
-app.get('/scrape', function(req, res){
+app.get('/excel', function(req, res){
 
   /* set up XMLHttpRequest */
   var url = "kwb-2017.xls";
@@ -38,7 +39,7 @@ app.get('/scrape', function(req, res){
 
    jsoninfo.push(XLSX.utils.sheet_to_json(worksheet));
     fs.writeFile('fullinfo.json', JSON.stringify(jsoninfo, null, 4), function(err){
-      // console.log('File successfully written! - Check your project directory for the output.json file');
+       console.log('File successfully written! - Check your project directory for the output.json file');
     })
 
 }

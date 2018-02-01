@@ -2,16 +2,14 @@
   <!--zoom="7"-->
   <!--center="Netherlands">-->
 <!--</ngui-map>-->
-
+<script src="node_modules/chart.js/src/chart.js"></script>
 <div>{{arr}}</div>
 
-<span id="info">
 
-    </span>
 <div class="dropdown" dropdown [dropdownToggle]="false">
   <button class="btn btn-primary" dropdown-open>Kies een stad voor meer info</button>
   <ul class="dropdown-menu">
-    <li value="Denhaag" (click)="goToDenHaag()"><a>Den haag</a></li>
+    <li value="Denhaag" (click)="goToDenHaag()" ><a>Den haag</a></li>
     <li value="Amsterdam" (click)="goToAmsterdam()"><a>Amsterdam</a></li>
     <li value="Utrecht" (click)="goToUtrecht()"><a>Utrecht</a></li>
     <li value="Gouda" (click)="goToGouda()"><a>Gouda</a></li>
@@ -23,8 +21,8 @@
 
   </ul>
 
-
 </div>
+
 
 <agm-map [latitude]="lat" [longitude]="lng"[usePanning]='true'>
 <div style="height: 10px;">
@@ -55,10 +53,8 @@
   <div id="legend"><h3>Legend</h3></div>
 
 </agm-map>
-<br>
 
-
-<div class="legenda" style="border-style: solid;">
+<div class="legenda" style="border-style: solid; width: 21em">
   <strong> Legenda: </strong><br>
   Inkomensgemiddelde: <br>
   <img style="width: 2em; height:2em"  src="assets/under15legenda.png"> Onder 15k <br>
@@ -66,6 +62,54 @@
   <img  style="width: 2em; height:2em"  src="assets/onder15k.png">  Tussen 20k-25k <br>
   <img style="width: 2em; height:2em"  src="assets/boven25k.png"> Boven 25k <br>
 
-<br>
+  <br>
   <img src="assets/legendahouse.png"> &emsp;=&emsp;Aantal inbraken in de wijk
 </div>
+<span id="info" >
+
+    </span>
+<div style="display: block"  *ngIf="showInfo" >
+  Inbraakdata is van <strong>11-10-2017</strong> tot heden. (bron: www.politie.nl)<br>
+  De favoriete inbraakdag in Den Haag is: <strong> {{item}} </strong><br>
+
+  Verdeling inbraken over de week:  <br>
+  Maandag: <strong> {{percentageMaandag}}%</strong>  <br>
+  Dinsdag: <strong> {{percentageDinsdag}}%</strong> <br>
+  Woensdag:<strong> {{percentageWoensdag}}%</strong> <br>
+  Donderdag: <strong>{{percentageDonderdag}}%</strong> <br>
+  Vrijdag: <strong> {{percentageVrijdag}} %</strong> <br>
+  Zaterdag: <strong> {{percentageZaterdag}} %</strong> <br>
+  Zondag:<strong> {{percentageZondag}}%</strong> <br>
+
+
+</div>
+
+<!--
+<div style="display: block"  *ngIf="showAmsterdam" >
+  Inbraakdata is van <strong>11-10-2017</strong> tot heden. (bron: www.politie.nl)<br>
+  De favoriete inbraakdag in Amsterdam is: <strong> {{item}} </strong><br>
+
+  Verdeling inbraken over de week:  <br>
+  Maandag: <strong> {{percentageMaandag}}%</strong>  <br>
+  Dinsdag: <strong> {{percentageDinsdag}}%</strong> <br>
+  Woensdag:<strong> {{percentageWoensdag}}%</strong> <br>
+  Donderdag: <strong>{{percentageDonderdag}}%</strong> <br>
+  Vrijdag: <strong> {{percentageVrijdag}} %</strong> <br>
+  Zaterdag: <strong> {{percentageZaterdag}} %</strong> <br>
+  Zondag:<strong> {{percentageZondag}}%</strong> <br>
+
+
+</div>
+-->
+
+<div *ngIf="showChart">
+<canvas  baseChart
+         [datasets]="barChartData"
+         [labels]="barChartLabels"
+         [options]="barChartOptions"
+         [chartType]="barChartType"
+         [legend]="barChartLegend"></canvas>
+</div>
+<br>
+
+

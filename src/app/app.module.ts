@@ -11,6 +11,7 @@ import {Http, HttpModule} from "@angular/http";
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { AlertModule } from 'ngx-bootstrap';
 import {DropdownModule} from "ngx-dropdown";
+import {ChartsModule} from "ng2-charts";
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {DropdownModule} from "ngx-dropdown";
   imports: [
     BrowserModule,
     DropdownModule,
+    ChartsModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyB8v3TT9It2lJ5JCAttcqRfF8o0POoNlsY'
     }),
