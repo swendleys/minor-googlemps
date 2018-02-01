@@ -13,12 +13,18 @@ import * as inbraak_latlon from './output.json';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import {Http} from "@angular/http";
 import 'rxjs/add/operator/map';
+import * as json from './elements.json';
 //import {VaadinCharts, DataSeries} from '../../../bower_components/vaadin-charts/vaadin-charts.html'
 import {last} from "@angular/router/src/utils/collection";
 import {DropdownModule} from "ngx-dropdown";
 import {any} from "codelyzer/util/function";
 import { AgmCoreModule, GoogleMapsAPIWrapper, AgmInfoWindow, AgmDataLayer, CircleManager, AgmCircle } from '@agm/core';
 import {$} from "protractor";
+
+//var json = require('./elements.json');
+
+var BayesClassifier = require('bayes-classifier')
+var classifier = new BayesClassifier()
 
 @Component({
   selector : 'googlemap',
@@ -30,6 +36,7 @@ export class GoogleMapsComponent implements OnInit{
   @ViewChild(GoogleMapsAPIWrapper) private gmapWrapper: GoogleMapsAPIWrapper;
   arr = [];
   arr2 = [];
+
   showChart: boolean = false;
   showDenHaag: boolean = false;
   showAmsterdam: boolean = false;
@@ -83,6 +90,7 @@ export class GoogleMapsComponent implements OnInit{
   percentageZaterdag;
   percentageZondag;
   count = 0;
+  json
   results: any;
   denHaagDays;
  utrechtDays;
@@ -91,9 +99,13 @@ export class GoogleMapsComponent implements OnInit{
   pages =['abc','bca','pqr'];
 
   str: string;
+  day: string;
   sendValues(): void {
- console.log(this.str);
+    console.log(classifier.classify('"postcode:' + this.str + ',dag:' + this.day + '"'))
+    console.log("'postcode:" + this.str + ",dag:" + this.day + "'")
   }
+
+
 
   constructor(private http: Http, private mapservice: GMapsService, map: MapsAPILoader) {
     this.jsonData = data;
@@ -104,6 +116,31 @@ export class GoogleMapsComponent implements OnInit{
     this.amsterdamDays = amsterdamdagen;
     this.utrechtDays = utrechtdagen;
     this.rotterdamDays = rotterdamdagen;
+    this.json = json;
+
+//console.log(json)
+
+    for (let i=0; i< this.json.length; i++) {
+      json[i]= JSON.stringify(json[i]).replace('{', '').replace('}', '').replace(/"/g, '')
+    }
+//console.log(json)
+
+    var eersteDocuments = json;
+
+    console.log(json);
+    var tweedeDocuments = [
+      'postcode: 3999, dag: Zondag',
+      'postcode: 4001, dag: Maandag'
+    ]
+
+    classifier.addDocuments(eersteDocuments, `inbraak`)
+    classifier.addDocuments(tweedeDocuments, `Geen inbraak`)
+    classifier.train()
+
+      function predict(){
+
+
+      }
 
   }
   public barChartOptions:any = {
@@ -391,7 +428,7 @@ export class GoogleMapsComponent implements OnInit{
     let position = {lat: 52.0704978, lng: 4.3006999};
     this.gmapWrapper.panTo(position);
     this.showChart=!this.showChart;
-    this.showInfo=!this.showInfo;
+    this.showInfo=true;
 
     /*document.getElementById("info").innerHTML = " Inbraakdata is van <strong>11-10-2017</strong> tot heden. (bron: www.politie.nl)<br>\n" +
       "  De favoriete inbraakdag in Den Haag is: <strong> "+ this.item + "</strong><br>\n" +
@@ -408,7 +445,7 @@ export class GoogleMapsComponent implements OnInit{
 
   public goToAmsterdam = () => {
     this.showInfo=true;
-    this.showChart=!this.showChart;
+    this.showChart=true;
     this.barChartData = [
       {data: [this.amsterdammaandag, this.amsterdamdinsdag, this.amsterdamwoensdag,  this.amsterdamdonderdag ,this.amsterdamvrijdag,this.amsterdamzaterdag ,this.amsterdamzondag]},
     ];

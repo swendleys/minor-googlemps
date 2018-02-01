@@ -67,8 +67,6 @@
 </div>
 
 
-<input id="str" [(ngModel)]="str"/>
-<button (click)="sendValues()">Send</button>
 
 <span id="info" >
 
@@ -88,8 +86,12 @@
 
 
 </div>
-
-
+<br>
+Naive Bayes classifier <br>
+____________________________ <br>
+Postcode: <input id="str" [(ngModel)]="str"/>
+Dag van de week: <input id="day" [(ngModel)]="day"/>
+<button (click)="sendValues()">Voorspel</button>
 
 <!--
 <div style="display: block"  *ngIf="showAmsterdam" >
