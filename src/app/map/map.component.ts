@@ -6,6 +6,7 @@ import * as data from './inkomen.json';
 import * as denhaagdagen from './denhaagdagen.json';
 import * as amsterdamdagen from './amsterdamdagen.json';
 import * as utrechtdagen from './utrechtdagen.json';
+import * as rotterdamdagen from './rotterdamdagen.json';
 import * as inbraakdata from '../../assets/output.json';
 import * as data_latlon from './inkomen_latlon.json';
 import * as inbraak_latlon from './output.json';
@@ -32,6 +33,7 @@ export class GoogleMapsComponent implements OnInit{
   showChart: boolean = false;
   showDenHaag: boolean = false;
   showAmsterdam: boolean = false;
+  showRotterdam: boolean = false;
   showInfo: boolean = false;
   jsonLatlon;
   map : any;
@@ -64,6 +66,14 @@ export class GoogleMapsComponent implements OnInit{
   utrechtzaterdag = 0;
   utrechtzondag = 0;
 
+  rotterdammaandag = 0;
+  rotterdamdinsdag = 0;
+  rotterdamwoensdag = 0;
+  rotterdamdonderdag = 0;
+  rotterdamvrijdag = 0;
+  rotterdamzaterdag = 0;
+  rotterdamzondag = 0;
+
   mf = 1;
   percentageMaandag;
   percentageDinsdag;
@@ -77,7 +87,13 @@ export class GoogleMapsComponent implements OnInit{
   denHaagDays;
  utrechtDays;
   amsterdamDays;
+  rotterdamDays;
   pages =['abc','bca','pqr'];
+
+  str: string;
+  sendValues(): void {
+ console.log(this.str);
+  }
 
   constructor(private http: Http, private mapservice: GMapsService, map: MapsAPILoader) {
     this.jsonData = data;
@@ -87,6 +103,7 @@ export class GoogleMapsComponent implements OnInit{
     this.denHaagDays = denhaagdagen;
     this.amsterdamDays = amsterdamdagen;
     this.utrechtDays = utrechtdagen;
+    this.rotterdamDays = rotterdamdagen;
 
   }
   public barChartOptions:any = {
@@ -151,6 +168,8 @@ export class GoogleMapsComponent implements OnInit{
       }
       m=0;
     }
+
+
 
     //tel dagen amsterdam
     for (let i=0; i< this.amsterdamDays.length; i++)
@@ -218,7 +237,6 @@ export class GoogleMapsComponent implements OnInit{
         this.utrechtzondag++;
       }
 
-
       //check welke meest voorkomt
       for (let j=i; j<this.utrechtDays.length; j++)
       {
@@ -231,6 +249,30 @@ export class GoogleMapsComponent implements OnInit{
         }
       }
       m=0;
+    }
+
+    for (let i=0; i< this.rotterdamDays.length; i++) {
+      if (this.rotterdamDays[i] === 'Maandag') {
+        this.rotterdammaandag++;
+      }
+      if (this.rotterdamDays[i] === 'Dinsdag') {
+        this.rotterdamdinsdag++;
+      }
+      if (this.rotterdamDays[i] === 'Woensdag') {
+        this.rotterdamwoensdag++;
+      }
+      if (this.rotterdamDays[i] === 'Donderdag') {
+        this.rotterdamdonderdag++;
+      }
+      if (this.rotterdamDays[i] === 'Vrijdag') {
+        this.rotterdamvrijdag++;
+      }
+      if (this.rotterdamDays[i] === 'Zaterdag') {
+        this.rotterdamzaterdag++;
+      }
+      if (this.rotterdamDays[i] === 'Zondag') {
+        this.rotterdamzondag++;
+      }
     }
 
 
@@ -365,7 +407,7 @@ export class GoogleMapsComponent implements OnInit{
   };
 
   public goToAmsterdam = () => {
-    this.showInfo=!this.showInfo;
+    this.showInfo=true;
     this.showChart=!this.showChart;
     this.barChartData = [
       {data: [this.amsterdammaandag, this.amsterdamdinsdag, this.amsterdamwoensdag,  this.amsterdamdonderdag ,this.amsterdamvrijdag,this.amsterdamzaterdag ,this.amsterdamzondag]},
@@ -396,7 +438,7 @@ export class GoogleMapsComponent implements OnInit{
     this.percentageZondag = this.percentageZondag.toFixed(1);
   };
   public goToUtrecht = () => {
-    this.showInfo=!this.showInfo;
+    this.showInfo=true;
     this.showChart=!this.showChart;
     this.barChartData = [
       {data: [this.utrechtmaandag, this.utrechtdinsdag, this.utrechtwoensdag,  this.utrechtdonderdag ,this.utrechtvrijdag,this.utrechtzaterdag ,this.utrechtzondag]},
@@ -440,6 +482,35 @@ export class GoogleMapsComponent implements OnInit{
   };
 
   public  goToRotterdam = () => {
+
+    this.showInfo=true;
+    this.showChart=!this.showChart;
+    this.barChartData = [
+      {data: [this.rotterdammaandag, this.rotterdamdinsdag, this.rotterdamwoensdag,  this.rotterdamdonderdag ,this.rotterdamvrijdag,this.rotterdamzaterdag ,this.rotterdamzondag]},
+    ];
+    this.percentageMaandag = this.utrechtmaandag / (this.utrechtDays.length) * 100;
+    this.percentageMaandag = this.percentageMaandag.toFixed(1);
+
+    this.percentageDinsdag = this.utrechtdinsdag / (this.utrechtDays.length) * 100;
+    this.percentageDinsdag = this.percentageDinsdag.toFixed(1);
+
+    this.percentageWoensdag = this.utrechtwoensdag / (this.utrechtDays.length) * 100;
+    this.percentageWoensdag = this.percentageWoensdag.toFixed(1);
+
+    this.percentageDonderdag = this.utrechtdonderdag / (this.utrechtDays.length) * 100;
+    this.percentageDonderdag = this.percentageDonderdag.toFixed(1);
+
+    this.percentageVrijdag = this.utrechtvrijdag / (this.utrechtDays.length) * 100;
+    this.percentageVrijdag = this.percentageVrijdag.toFixed(1);
+
+    this.percentageZaterdag = this.utrechtzaterdag / (this.utrechtDays.length) * 100;
+    this.percentageZaterdag = this.percentageZaterdag.toFixed(1);
+
+    this.percentageZondag = this.utrechtzondag / (this.utrechtDays.length) * 100;
+    this.percentageZondag = this.percentageZondag.toFixed(1);
+
+
+
     console.log("We gaan naar Roffa");
     let position = {lat:  51.9244201, lng:  4.4777325};
     this.gmapWrapper.panTo(position);
