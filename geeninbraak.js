@@ -12,7 +12,7 @@ let geenInbraak = [];
 for(let i = 0; i < postcodes.length; i++) {
   for(let j = 0; j < 7; j++)
 //geenInbraak.push(postcodes[i]);
-  geenInbraak.push({postcode: postcodes[i], dag: days[j]});
+  geenInbraak.push({postcode: postcodes[i].toString(), dag: days[j]});
 }
 
 
