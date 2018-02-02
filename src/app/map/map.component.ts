@@ -130,6 +130,12 @@ export class GoogleMapsComponent implements OnInit{
       }
       json[i]= JSON.stringify(json[i]).replace('{', '').replace('}', '').replace(/"/g, '')
     }
+    for (let i=0; i< this.noInbraak.length; i++) {
+      if(out !== this.noInbraak[i].postcode) {
+        this.geenInbraak.push(out);
+      }
+      this.noInbraak[i]= JSON.stringify(this.noInbraak[i]).replace('{', '').replace('}', '').replace(/"/g, '')
+    }
    //   console.log('out' + out)
    // console.log('geeninbraak' + this.geenInbraak)
 //console.log(json)
@@ -137,9 +143,7 @@ export class GoogleMapsComponent implements OnInit{
     var eersteDocuments = json;
 
    // console.log(json);
-    var tweedeDocuments = [
-     this.noInbraak
-    ]
+    var tweedeDocuments = this.noInbraak
 
     console.log("Geen Inbraak:" + this.noInbraak)
     classifier.addDocuments(eersteDocuments, `inbraak`)
@@ -166,7 +170,11 @@ export class GoogleMapsComponent implements OnInit{
   public barChartType:string = 'bar';
 
   ngOnInit(){
-    console.log(this.jsonData)
+
+    console.log(this.noInbraak)
+    console.log(this.json)
+
+    // console.log(this.jsonData)
    // console.log(this.jsonLatlon.data)
    // console.log(this.results)
     this.convert()
