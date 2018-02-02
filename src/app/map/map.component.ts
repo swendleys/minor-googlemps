@@ -9,6 +9,7 @@ import * as utrechtdagen from './utrechtdagen.json';
 import * as rotterdamdagen from './rotterdamdagen.json';
 import * as inbraakdata from '../../assets/output.json';
 import * as data_latlon from './inkomen_latlon.json';
+import * as geenInbraak from './geenInbraak.json';
 import * as inbraak_latlon from './output.json';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import {Http} from "@angular/http";
@@ -97,6 +98,7 @@ export class GoogleMapsComponent implements OnInit{
  utrechtDays;
   amsterdamDays;
   rotterdamDays;
+  noInbraak;
   pages =['abc','bca','pqr'];
 
   str: string;
@@ -117,6 +119,7 @@ export class GoogleMapsComponent implements OnInit{
     this.utrechtDays = utrechtdagen;
     this.rotterdamDays = rotterdamdagen;
     this.json = json;
+    this.noInbraak = geenInbraak;
 
 //console.log(json)
     for (let i=0; i< this.json.length; i++) {
@@ -133,10 +136,10 @@ export class GoogleMapsComponent implements OnInit{
 
    // console.log(json);
     var tweedeDocuments = [
-      'postcode: 3999,dag: Zondag',
-      'postcode: 4001,dag: Maandag'
+     this.noInbraak
     ]
 
+    console.log("Geen Inbraak:" + this.noInbraak)
     classifier.addDocuments(eersteDocuments, `inbraak`)
     classifier.addDocuments(tweedeDocuments, `Geen inbraak`)
     classifier.train()

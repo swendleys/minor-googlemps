@@ -1,4 +1,4 @@
-var json = require('./elements.json');
+nvar json = require('./elements.json');
 
 var BayesClassifier = require('bayes-classifier')
 var classifier = new BayesClassifier()
