@@ -19,9 +19,10 @@ import {last} from "@angular/router/src/utils/collection";
 import {DropdownModule} from "ngx-dropdown";
 import {any} from "codelyzer/util/function";
 import { AgmCoreModule, GoogleMapsAPIWrapper, AgmInfoWindow, AgmDataLayer, CircleManager, AgmCircle } from '@agm/core';
-import {$} from "protractor";
+import {$, element} from "protractor";
 
 //var json = require('./elements.json');
+let out = Array.from(Array(4000), (_,x) => x);
 
 var BayesClassifier = require('bayes-classifier')
 var classifier = new BayesClassifier()
@@ -80,7 +81,7 @@ export class GoogleMapsComponent implements OnInit{
   rotterdamvrijdag = 0;
   rotterdamzaterdag = 0;
   rotterdamzondag = 0;
-
+  geenInbraak = [];
   mf = 1;
   percentageMaandag;
   percentageDinsdag;
@@ -90,7 +91,7 @@ export class GoogleMapsComponent implements OnInit{
   percentageZaterdag;
   percentageZondag;
   count = 0;
-  json
+  json;
   results: any;
   denHaagDays;
  utrechtDays;
@@ -106,7 +107,6 @@ export class GoogleMapsComponent implements OnInit{
   }
 
 
-
   constructor(private http: Http, private mapservice: GMapsService, map: MapsAPILoader) {
     this.jsonData = data;
     this.jsonLatlon = data_latlon
@@ -119,18 +119,22 @@ export class GoogleMapsComponent implements OnInit{
     this.json = json;
 
 //console.log(json)
-
     for (let i=0; i< this.json.length; i++) {
+      if(out !== this.json[i].postcode) {
+        this.geenInbraak.push(out);
+      }
       json[i]= JSON.stringify(json[i]).replace('{', '').replace('}', '').replace(/"/g, '')
     }
+      console.log('out' + out)
+    console.log('geeninbraak' + this.geenInbraak)
 //console.log(json)
 
     var eersteDocuments = json;
 
-    console.log(json);
+   // console.log(json);
     var tweedeDocuments = [
-      'postcode: 3999, dag: Zondag',
-      'postcode: 4001, dag: Maandag'
+      'postcode: 3999,dag: Zondag',
+      'postcode: 4001,dag: Maandag'
     ]
 
     classifier.addDocuments(eersteDocuments, `inbraak`)
