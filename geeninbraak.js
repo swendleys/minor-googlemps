@@ -3,11 +3,16 @@
 let json = require('./elements.json');
 var fs = require('fs');
 
+let days = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
 let postcodes = Array.from(new Array(3000), (x,i) => i + 1000)
 let geenInbraak = [];
 
+//console.log(days)
+
 for(let i = 0; i < postcodes.length; i++) {
-geenInbraak.push(postcodes[i]);
+  for(let j = 0; j < 7; j++)
+//geenInbraak.push(postcodes[i]);
+  geenInbraak.push({postcode: postcodes[i], dag: days[j]});
 }
 
 
