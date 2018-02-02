@@ -98,6 +98,7 @@ export class GoogleMapsComponent implements OnInit{
  utrechtDays;
   amsterdamDays;
   rotterdamDays;
+  voorspelling;
   noInbraak;
   pages =['abc','bca','pqr'];
 
@@ -105,6 +106,7 @@ export class GoogleMapsComponent implements OnInit{
   day: string;
   sendValues(): void {
     console.log(classifier.classify('"postcode:' + this.str + ',dag:' + this.day + '"'))
+    this.voorspelling = classifier.classify('"postcode:' + this.str + ',dag:' + this.day + '"');
     console.log("'postcode:" + this.str + ",dag:" + this.day + "'")
   }
 
@@ -128,8 +130,8 @@ export class GoogleMapsComponent implements OnInit{
       }
       json[i]= JSON.stringify(json[i]).replace('{', '').replace('}', '').replace(/"/g, '')
     }
-      console.log('out' + out)
-    console.log('geeninbraak' + this.geenInbraak)
+   //   console.log('out' + out)
+   // console.log('geeninbraak' + this.geenInbraak)
 //console.log(json)
 
     var eersteDocuments = json;
@@ -142,6 +144,7 @@ export class GoogleMapsComponent implements OnInit{
     console.log("Geen Inbraak:" + this.noInbraak)
     classifier.addDocuments(eersteDocuments, `inbraak`)
     classifier.addDocuments(tweedeDocuments, `Geen inbraak`)
+
     classifier.train()
 
       function predict(){
@@ -164,8 +167,8 @@ export class GoogleMapsComponent implements OnInit{
 
   ngOnInit(){
     console.log(this.jsonData)
-    console.log(this.jsonLatlon.data)
-    console.log(this.results)
+   // console.log(this.jsonLatlon.data)
+   // console.log(this.results)
     this.convert()
     let pos1 = {lat: 52.0704978, lng: 4.3006999};
     this.gmapWrapper.setCenter(pos1)

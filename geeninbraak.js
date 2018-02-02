@@ -15,7 +15,6 @@ for(let i = 0; i < postcodes.length; i++) {
   geenInbraak.push({postcode: postcodes[i].toString(), dag: days[j]});
 }
 
-
 //console.log(geenInbraak)
 
 fs.writeFile('geenInbraak.json', JSON.stringify(geenInbraak, null, 4), function(err){
